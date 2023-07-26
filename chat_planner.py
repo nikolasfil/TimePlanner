@@ -37,10 +37,17 @@ class ExcelSheetApp:
 
     def run(self):
         self.window = sg.Window("Excel Sheet", self.layout, finalize=True)
+        self.window.bind('<q>', '+Q')  # Bind the 'q' key to the close event
+        self.window.bind('<c>', '-CHECK-')
+        self.window.bind('<C>', '-CLEAR-ALL-')
+        self.window.bind('<l>', '-CLEAR-COLOR-')
+
         while True:
             event, values = self.window.read()
 
             if event == sg.WIN_CLOSED:
+                break
+            elif event == '+Q':
                 break
             elif event == '-CLEAR-COLOR-':
                 self.clear_cell_colors()
@@ -64,6 +71,7 @@ class ExcelSheetApp:
                 self.window[(row, col)].update(background_color='white')
 
     def check_and_color_inputs(self):
+        self.check_population()
         for row in range(self.num_rows):  # Exclude the header row
             for col in range(1, self.num_cols):
                 value = self.window[(row, col)].get()
@@ -71,6 +79,16 @@ class ExcelSheetApp:
                     self.window[(row, col)].update(background_color='blue')
                 else:
                     self.window[(row, col)].update(background_color='white')
+
+    def check_population(self):
+        dic = {}
+        for row in range(self.num_rows):
+            for col in range(1, self.num_cols):
+                value = self.window[(row, col)].get()
+                if len(value) not in dic.keys():
+                    dic[len(value)] = 0
+                dic[len(value)] += 1
+        print(dic)
 
 
 if __name__ == "__main__":
