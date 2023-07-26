@@ -6,8 +6,8 @@ class ExcelSheetApp:
         self.num_rows = 12
         self.num_cols = 8
         self.layout = [
-            [sg.Button("Clear", key='-CLEAR-'), sg.Text('Navigation'),
-             sg.Button("Check", key='-CHECK-')],
+            [sg.Button("Clear Color", key='-CLEAR-COLOR-'), sg.Button("Clear All",
+                                                                      key='-CLEAR-ALL-'), sg.Text('Navigation'), sg.Button("Check", key='-CHECK-')],
         ]
         self.create_input_fields()
 
@@ -40,21 +40,29 @@ class ExcelSheetApp:
 
             if event == sg.WIN_CLOSED:
                 break
-            elif event == '-CLEAR-':
-                self.clear_input_fields()
+            elif event == '-CLEAR-COLOR-':
+                self.clear_cell_colors()
+            elif event == '-CLEAR-ALL-':
+                self.clear_all()
+
             elif event == '-CHECK-':
                 self.check_and_color_inputs()
 
         self.window.close()
 
-    def clear_input_fields(self):
+    def clear_cell_colors(self):
+        for row in range(self.num_rows):  # Exclude the header row
+            for col in range(1, self.num_cols):
+                self.window[(row, col)].update(background_color='white')
+
+    def clear_all(self):
         for row in range(self.num_rows):
             for col in range(1, self.num_cols):
                 self.window[(row, col)].update('')
                 self.window[(row, col)].update(background_color='white')
 
     def check_and_color_inputs(self):
-        for row in range(1, self.num_rows):  # Exclude the header row
+        for row in range(self.num_rows):  # Exclude the header row
             for col in range(1, self.num_cols):
                 value = self.window[(row, col)].get()
                 if value == '1':
