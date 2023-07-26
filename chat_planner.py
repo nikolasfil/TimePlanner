@@ -43,6 +43,8 @@ class ExcelSheetApp:
         self.window.bind('<l>', '-CLEAR-COLOR-')
         # bind the mouse right click to the color individual event
         self.window.bind('<Button-3>', 'mouse')
+        # Bind the escape key to unfocus the input field
+        self.window.bind('<Escape>', '-UnFocusInput-')
 
         while True:
             event, values = self.window.read()
@@ -62,11 +64,16 @@ class ExcelSheetApp:
                 print(self.window.current_location())
                 # self.color_individual(event)
 
+            elif event == '-UnFocusInput-':
+                # focus on the clear button
+                self.window['-CHECK-'].set_focus(force=True)
+
         self.window.close()
 
     def clear_cell_colors(self):
         for row in range(self.num_rows):  # Exclude the header row
             for col in range(1, self.num_cols):
+
                 self.window[(row, col)].update(background_color='white')
 
     def clear_all(self):
@@ -76,7 +83,7 @@ class ExcelSheetApp:
                 self.window[(row, col)].update(background_color='white')
 
     def check_and_color_inputs(self):
-        self.check_population()
+        print(self.check_population())
         for row in range(self.num_rows):  # Exclude the header row
             for col in range(1, self.num_cols):
                 value = self.window[(row, col)].get()
@@ -86,24 +93,22 @@ class ExcelSheetApp:
                     self.window[(row, col)].update(background_color='white')
 
     def check_population(self):
+
         dic = {}
         for row in range(self.num_rows):
             for col in range(1, self.num_cols):
                 value = self.window[(row, col)].get()
+                self.clear_letters(row, col, value)
                 if len(value) not in dic.keys():
                     dic[len(value)] = 0
                 else:
                     dic[len(value)] += 1
                     print(value)
-        print(dic)
+        return dic
 
-    def color_individual(self, event, position):
-        # Extract the row, col key from the event
-
-        field_key = event.split('-')[0]
-        print(field_key)
-        row, col = map(int, field_key.split(','))
-        # self.window[(row, col)].update(background_color='pink')
+    def clear_letters(self, row, col, value):
+        if value in ['c', 'C', 'l']:
+            self.window[(row, col)].update(self.window[(row, col)].get()[:-1])
 
 
 if __name__ == "__main__":
