@@ -8,8 +8,8 @@ class ExcelSheetApp:
         # Size of the input fields and days of the week
         self.field_size = (15, 1)
         self.layout = [
-            [sg.Button("Clear Color", key='-CLEAR-COLOR-'), sg.Button("Clear All",
-                                                                      key='-CLEAR-ALL-'), sg.Text('Navigation'), sg.Button("Check", key='-CHECK-')],
+            [sg.Button("Quit", key='+Q'), sg.Button("Clear Color", key='-CLEAR-COLOR-'),
+             sg.Button("Clear All", key='-CLEAR-ALL-'), sg.Button("Check", key='-CHECK-')],
         ]
         self.create_input_fields()
 
@@ -83,12 +83,17 @@ class ExcelSheetApp:
                 self.window[(row, col)].update(background_color='white')
 
     def check_and_color_inputs(self):
-        print(self.check_population())
+        keys = list(self.check_population().keys())
+        print(keys)
         for row in range(self.num_rows):  # Exclude the header row
             for col in range(1, self.num_cols):
                 value = self.window[(row, col)].get()
-                if value == '1':
-                    self.window[(row, col)].update(background_color='blue')
+                if len(value) == keys[0]:
+                    self.window[(row, col)].update(
+                        background_color='lightgreen')
+                elif len(value) == keys[1]:
+                    self.window[(row, col)].update(
+                        background_color='lightblue')
                 else:
                     self.window[(row, col)].update(background_color='white')
 
@@ -100,11 +105,11 @@ class ExcelSheetApp:
                 value = self.window[(row, col)].get()
                 self.clear_letters(row, col, value)
                 if len(value) not in dic.keys():
-                    dic[len(value)] = 0
+                    dic[len(value)] = 1
                 else:
                     dic[len(value)] += 1
                     print(value)
-        return dic
+        return {key: val for key, val in sorted(dic.items(), key=lambda ele: ele[0])}
 
     def clear_letters(self, row, col, value):
         if value in ['c', 'C', 'l']:
