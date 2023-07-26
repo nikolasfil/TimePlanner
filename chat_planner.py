@@ -6,7 +6,7 @@ class ExcelSheetApp:
         self.num_rows = 12
         self.num_cols = 7
         self.layout = [
-            [sg.Button("Clear", key='-CLEAR-'),
+            [sg.Button("Clear", key='-CLEAR-'), sg.Text('Navigation'),
              sg.Button("Check", key='-CHECK-')],
         ]
         self.create_input_fields()
@@ -27,28 +27,25 @@ class ExcelSheetApp:
             if event == sg.WIN_CLOSED:
                 break
             elif event == '-CLEAR-':
-                # Handle the previous button click
-                # You can implement the logic for navigation here
-                pass
+                self.clear_input_fields()
             elif event == '-CHECK-':
-                # Handle the next button click
-                # You can implement the logic for navigation here
-                print('Check')
-            else:
-                self.check_and_color_input(event)
+                self.check_and_color_inputs()
 
         self.window.close()
 
-    def check_and_color_input(self, event):
-        try:
-            row, col = event
-            value = self.window[event].get()
-            if value == '1':
-                self.window[event].update(background_color='blue')
-            else:
-                self.window[event].update(background_color='white')
-        except Exception as e:
-            print(f"Error: {e}")
+    def clear_input_fields(self):
+        for row in range(self.num_rows):
+            for col in range(self.num_cols):
+                self.window[(row, col)].update('')
+
+    def check_and_color_inputs(self):
+        for row in range(self.num_rows):
+            for col in range(self.num_cols):
+                value = self.window[(row, col)].get()
+                if value == '1':
+                    self.window[(row, col)].update(background_color='blue')
+                else:
+                    self.window[(row, col)].update(background_color='white')
 
 
 if __name__ == "__main__":
