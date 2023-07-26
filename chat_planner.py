@@ -4,7 +4,7 @@ import PySimpleGUI as sg
 class ExcelSheetApp:
     def __init__(self):
         self.num_rows = 12
-        self.num_cols = 8
+        self.num_cols = 6
         # Size of the input fields and days of the week
         self.field_size = (15, 1)
         self.layout = [
@@ -14,7 +14,7 @@ class ExcelSheetApp:
         self.create_input_fields()
 
     def create_input_fields(self):
-        days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
         time_slots = ['09:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00',
                       '15:00-16:00', '16:00-17:00', '17:00-18:00', '18:00-19:00', '19:00-20:00', '20:00-21:00']
 
