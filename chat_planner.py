@@ -36,11 +36,13 @@ class ExcelSheetApp:
             self.layout.append(row_layout)
 
     def run(self):
-        self.window = sg.Window("Excel Sheet", self.layout, finalize=True)
+        self.window = sg.Window("Time Planner", self.layout, finalize=True)
         self.window.bind('<q>', '+Q')  # Bind the 'q' key to the close event
         self.window.bind('<c>', '-CHECK-')
         self.window.bind('<C>', '-CLEAR-ALL-')
         self.window.bind('<l>', '-CLEAR-COLOR-')
+        # bind the mouse right click to the color individual event
+        self.window.bind('<Button-3>', 'mouse')
 
         while True:
             event, values = self.window.read()
@@ -53,9 +55,12 @@ class ExcelSheetApp:
                 self.clear_cell_colors()
             elif event == '-CLEAR-ALL-':
                 self.clear_all()
-
             elif event == '-CHECK-':
                 self.check_and_color_inputs()
+            elif 'mouse' in event:
+                # print the position of the mouse inside the window
+                print(self.window.current_location())
+                # self.color_individual(event)
 
         self.window.close()
 
@@ -87,8 +92,18 @@ class ExcelSheetApp:
                 value = self.window[(row, col)].get()
                 if len(value) not in dic.keys():
                     dic[len(value)] = 0
-                dic[len(value)] += 1
+                else:
+                    dic[len(value)] += 1
+                    print(value)
         print(dic)
+
+    def color_individual(self, event, position):
+        # Extract the row, col key from the event
+
+        field_key = event.split('-')[0]
+        print(field_key)
+        row, col = map(int, field_key.split(','))
+        # self.window[(row, col)].update(background_color='pink')
 
 
 if __name__ == "__main__":
